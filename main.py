@@ -26,7 +26,7 @@ print()
 print(df_main.head(10))
 
 
-# Getting the all_stocks page and merging it into df_main
+# Getting the all_stocks sheet and merging it into df_main
 df_all_stocks = pd.read_excel("./tabela_de_acoes.xlsx", sheet_name="all_stocks")
 df_all_stocks = df_all_stocks.rename(columns={'Código': 'ticker', 'Qtde. Teórica': 'total_stocks'})
 
@@ -42,3 +42,20 @@ df_main['total_variation_brl'] = (df_main['day_last_price_brl'] - df_main['day_f
 
 print()
 print(df_main.head(10))
+
+
+# Creating a new column and apply the validation for each cell (x) in 'total_variation_brl'
+df_main['result'] = df_main['total_variation_brl'].apply(lambda x: '+' if x > 0 else ('-' if x < 0 else '='))
+
+print()
+print(df_main)
+
+
+# Getting stock names from a different sheet
+df_name = pd.read_excel("./tabela_de_acoes.xlsx", sheet_name="name")
+df_name = df_name.rename(columns={'Ticker': 'ticker', 'Nome': 'name'})
+
+df_main = df_main.merge(df_name, left_on='ticker', right_on='ticker', how='left')
+	
+print()
+print(df_main)
